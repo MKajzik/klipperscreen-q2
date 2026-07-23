@@ -451,6 +451,42 @@ Before experimenting with the display stack, read
 [CONTRIBUTING.md](CONTRIBUTING.md)—especially the part about why testing it
 during a print is a creative but poor decision.
 
+## Ramen and coffee fund
+
+This project is free. Ramen, coffee, and late-night arguments with framebuffer
+orientation remain stubbornly non-free.
+
+If this project rescued your Q2 from stock-screen claustrophobia and you want
+to feed the geek behind it, the following addresses work:
+
+**Bitcoin (BTC)**
+
+```text
+bc1qeme3jqsyedx7feeuyudppl8xuuetnrq7axu4ql
+```
+
+**Ethereum (ETH, ERC-20 USDT, or ERC-20 USDC)**
+
+```text
+0x1CeefD941Bd801279B5152f8e0eed5253926676D
+```
+
+**Litecoin (LTC)**
+
+```text
+ltc1qfgaw6xjy39606a6mcmlt4mzzk6e8jjqxmjnwjk
+```
+
+**Tron (TRX, TRC-20 USDT, or TRC-20 USDC)**
+
+```text
+TSkE5HrxEXybYk8dU6fGvgXjyij8LmS3M2
+```
+
+Double-check both the address and network before sending. Blockchains remain
+famously underfunded in the Undo button department. For anything larger than
+your acceptable contribution to the void, send a tiny test transaction first.
+
 ## Credits
 
 - [KlipperScreen](https://github.com/KlipperScreen/KlipperScreen), for the
