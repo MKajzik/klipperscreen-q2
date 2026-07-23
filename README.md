@@ -73,29 +73,194 @@ Both demos are silent, fast-start H.264 at 1280×720. The originals were 1080p
 HEVC phone footage; excellent for a camera roll, less excellent for browsers
 and Git history.
 
-## Quick start
+## Installation
 
-Copy the installer and its checksum to the printer:
+Windows, macOS, and Linux disagree about many things. Fortunately, all three
+can speak SSH to a printer.
+
+### Before you begin
+
+- The printer must be a **QIDI Q2 running firmware `01.01.02.03`**.
+- The printer must be fully booted, idle, and not installing a firmware update.
+- The computer and printer must be on the same local network.
+- The printer needs internet access while the installer downloads its pinned
+  dependencies.
+- Keep the stock screen available during installation. Do not power the printer
+  off because a progress line paused long enough to make you suspicious.
+
+The verified factory SSH credentials are:
+
+| Field | Factory value |
+|---|---|
+| SSH user | `mks` |
+| SSH password | `makerbase` |
+| `sudo` password | `makerbase` |
+
+If you changed these credentials, use your own values. Passwords are not shown
+while you type them in a terminal—not even dots. That is normal Unix behavior,
+not the printer judging your typing.
+
+### 1. Download the repository
+
+The simplest route:
+
+1. Click **Code**, then **Download ZIP** on this repository page.
+2. Extract the ZIP.
+3. Open the extracted `klipperscreen-q2-main` folder.
+
+If Git is already installed and authenticated with GitHub, cloning works too:
+
+```sh
+git clone https://github.com/jeecrypt/klipperscreen-q2.git
+cd klipperscreen-q2
+```
+
+The two files used for installation are:
+
+```text
+install-klipperscreen-q2-on-printer.sh
+install-klipperscreen-q2-on-printer.sh.sha256
+```
+
+Do not open and resave the shell script in a random text editor. The installer
+likes Unix line endings and has already had enough adventure for one project.
+
+### 2. Find the printer IP address
+
+Open the network page on the Q2 display and note its IPv4 address. It will
+usually look similar to `192.168.1.123`.
+
+Every command below uses `PRINTER_IP` as a placeholder. Replace it with the
+actual address:
+
+```text
+mks@PRINTER_IP     becomes     mks@192.168.1.123
+```
+
+The address may change after a router or printer restart unless the router has
+a DHCP reservation for the Q2.
+
+### 3. Check SSH on your computer
+
+#### Windows 10 or 11
+
+Open **PowerShell** or **Windows Terminal** and run:
+
+```powershell
+Get-Command ssh
+Get-Command scp
+```
+
+If both commands print a path, continue. If either command is missing, install
+**OpenSSH Client** from one of these locations:
+
+```text
+Windows 11: Settings → System → Optional Features → View features
+Windows 10: Settings → Apps → Optional features → Add a feature
+```
+
+Users of Git Bash or WSL may follow the macOS/Linux commands instead.
+
+#### macOS
+
+Open **Terminal**. SSH and SCP are included with macOS:
+
+```sh
+command -v ssh scp
+```
+
+#### Linux
+
+Open a terminal and check for both commands:
+
+```sh
+command -v ssh scp
+```
+
+Most distributions install them by default. On Debian or Ubuntu, the missing
+package is:
+
+```sh
+sudo apt install openssh-client
+```
+
+### 4. Make the first SSH connection
+
+The command is the same on every operating system:
+
+```sh
+ssh mks@PRINTER_IP
+```
+
+On the first connection, SSH asks whether you trust the printer host key. Check
+that the IP is your Q2, type `yes`, and press Enter. Then enter the SSH password.
+
+If the login succeeds, the prompt changes to the printer shell. Type:
+
+```sh
+exit
+```
+
+That first handshake saves the host key now, so SCP will not interrupt the
+upload with a surprise identity crisis later.
+
+### 5. Upload the installer
+
+First open a terminal **inside the extracted or cloned repository folder**.
+
+#### Windows PowerShell
+
+In File Explorer, open the repository folder, right-click empty space, and
+choose **Open in Terminal**. Then run this as one line:
+
+```powershell
+scp .\install-klipperscreen-q2-on-printer.sh .\install-klipperscreen-q2-on-printer.sh.sha256 mks@PRINTER_IP:/home/qidi/
+```
+
+#### macOS or Linux
+
+Change to the repository directory and run:
 
 ```sh
 scp \
   install-klipperscreen-q2-on-printer.sh \
   install-klipperscreen-q2-on-printer.sh.sha256 \
   mks@PRINTER_IP:/home/qidi/
-
-ssh mks@PRINTER_IP
 ```
 
-Everything below runs **on the QIDI Q2**:
+Enter the SSH password when prompted. A successful upload returns to the local
+prompt without drama, fireworks, or a certificate suitable for framing.
+
+### 6. Connect to the printer and verify the upload
 
 ```sh
+ssh mks@PRINTER_IP
 cd /home/qidi
+ls -lh \
+  install-klipperscreen-q2-on-printer.sh \
+  install-klipperscreen-q2-on-printer.sh.sha256
 sha256sum -c install-klipperscreen-q2-on-printer.sh.sha256
-sudo bash install-klipperscreen-q2-on-printer.sh install
 ```
 
-If you copied only the installer, you may run it directly. The script still
-verifies every downloaded and embedded component before installing it.
+The checksum command must report:
+
+```text
+install-klipperscreen-q2-on-printer.sh: OK
+```
+
+If it reports `FAILED`, do not run the installer. Upload both files again from
+a fresh repository download.
+
+### 7. Install KlipperScreen
+
+Everything from this point runs **on the QIDI Q2**:
+
+```sh
+sudo bash /home/qidi/install-klipperscreen-q2-on-printer.sh install
+```
+
+Enter the `sudo` password when prompted. Leave the SSH window open until the
+script finishes.
 
 The installer will:
 
@@ -108,6 +273,38 @@ The installer will:
 
 The first launch takes a few seconds. The logo is not merely decorative: it
 means the printer is alive and GTK is gathering its thoughts.
+
+### 8. Verify the result
+
+Still connected over SSH, run:
+
+```sh
+sudo bash /home/qidi/install-klipperscreen-q2-on-printer.sh status
+systemctl is-active KlipperScreen.service
+systemctl is-active q2-display-gesture.service
+```
+
+Both services should report `active`. Then test the screen:
+
+1. swipe from the top edge to the bottom to return to the stock QIDI UI;
+2. swipe from the bottom edge to the top to open KlipperScreen again.
+
+Type `exit` when finished.
+
+### SSH problems before installation
+
+- **Connection timed out:** confirm the IP, keep both devices on the same LAN,
+  and avoid guest Wi-Fi or access-point isolation.
+- **Connection refused:** wait for the Q2 to finish booting and try again.
+- **Permission denied:** use `mks` and the current printer SSH password.
+- **Host identification has changed:** first confirm that the IP still belongs
+  to your Q2. If the printer was reset or reflashed, remove the old key with
+  `ssh-keygen -R PRINTER_IP`, then reconnect.
+- **`scp` cannot find the files:** the terminal is not open in the repository
+  folder. Change directory or use the full local file paths.
+
+Installation and display recovery problems live in
+[Troubleshooting and recovery](docs/TROUBLESHOOTING.md).
 
 ## Display controls
 
