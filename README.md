@@ -1,15 +1,3 @@
-
-
-https://github.com/user-attachments/assets/28980aa5-b12a-4b6f-87f2-05b89f413b6e
-
-
-
-https://github.com/user-attachments/assets/62a5223e-957d-4693-8391-08c91164f8c1
-
-
-
-https://github.com/user-attachments/assets/68e310dd-f4af-480b-9329-ef28cf4354cf
-
 <p align="center">
   <img src="assets/klipperscreen-splash.png" width="480" alt="KlipperScreen on QIDI Q2">
 </p>
@@ -70,17 +58,16 @@ self-contained script, executed **on the printer itself**, that turns the stock
 
 ### Full KlipperScreen tour
 
-[![Watch the KlipperScreen UI tour](docs/images/klipperscreen-ui-tour.jpg)](docs/media/klipperscreen-ui-tour.mp4)
+https://github.com/user-attachments/assets/28980aa5-b12a-4b6f-87f2-05b89f413b6e
 
 Startup splash, touch navigation, panels, and the camera view—all on the stock
-Q2 display. [Watch the 1:12 MP4](docs/media/klipperscreen-ui-tour.mp4).
+Q2 display.
 
 ### Returning to the stock QIDI UI
 
-[![Watch the stock UI return](docs/images/stock-ui-return.jpg)](docs/media/stock-ui-return.mp4)
+https://github.com/user-attachments/assets/62a5223e-957d-4693-8391-08c91164f8c1
 
 The other half of the escape hatch.
-[Watch the 16-second MP4](docs/media/stock-ui-return.mp4).
 
 Both demos are silent, fast-start H.264 at 1280×720. The originals were 1080p
 HEVC phone footage; excellent for a camera roll, less excellent for browsers
