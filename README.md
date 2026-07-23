@@ -1,3 +1,15 @@
+
+
+https://github.com/user-attachments/assets/28980aa5-b12a-4b6f-87f2-05b89f413b6e
+
+
+
+https://github.com/user-attachments/assets/62a5223e-957d-4693-8391-08c91164f8c1
+
+
+
+https://github.com/user-attachments/assets/68e310dd-f4af-480b-9329-ef28cf4354cf
+
 <p align="center">
   <img src="assets/klipperscreen-splash.png" width="480" alt="KlipperScreen on QIDI Q2">
 </p>
