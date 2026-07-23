@@ -1,0 +1,71 @@
+name: Something went sideways
+description: Report an installer, display, touch, gesture, or splash problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please keep passwords, tokens, and private keys out of it.
+
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware version
+      description: Output from `dpkg-query -W qd-q2-system`
+      placeholder: 01.01.02.03
+    validations:
+      required: true
+
+  - type: input
+    id: installer
+    attributes:
+      label: Installer version
+      description: First line from `sudo ... status`
+      placeholder: 1.3.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Installation
+        - KlipperScreen
+        - Touch
+        - Gestures
+        - Splash
+        - Stock UI recovery
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: What did you do, what did you expect, and what happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: status
+    attributes:
+      label: Status and logs
+      description: |
+        Include installer status and relevant journal output. Remove secrets and public IP addresses.
+      render: shell
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety checks
+      options:
+        - label: The problem did not occur during an active print
+          required: true
+        - label: I removed passwords, tokens, and private data from the logs
+          required: true

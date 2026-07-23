@@ -1,0 +1,13 @@
+[Unit]
+Description=QIDI Q2 full-screen swipe display switcher
+After=local-fs.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/local/libexec/q2/q2-display-gesture
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+[Unit]
+Description=KlipperScreen for QIDI Q2
+After=moonraker.service network-online.target
+Wants=network-online.target
+Conflicts=qidi-client.service
+OnFailure=q2-display-fallback.service
+StartLimitIntervalSec=60
+StartLimitBurst=2
+
+[Service]
+Type=simple
+User=qidi
+Group=qidi
+SupplementaryGroups=video input
+RuntimeDirectory=klipperscreen-q2
+RuntimeDirectoryMode=0700
+EnvironmentFile=-/etc/default/klipperscreen-q2
+ExecStart=/usr/local/libexec/q2/start-klipperscreen-q2
+Restart=no
+TimeoutStopSec=10
+UMask=0022
+
+[Install]
+WantedBy=multi-user.target

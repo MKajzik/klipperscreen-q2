@@ -1,0 +1,69 @@
+#!/bin/bash
+set -u
+
+export HOME="/home/qidi"
+export DISPLAY=":0"
+export XDG_RUNTIME_DIR="/run/klipperscreen-q2"
+
+XVFB="/usr/bin/Xvfb"
+BRIDGE="/usr/local/libexec/q2/q2-x11-fb-bridge"
+PYTHON="/home/qidi/.KlipperScreen-env/bin/python"
+SCREEN="/home/qidi/KlipperScreen/screen.py"
+CONFIG="/home/qidi/printer_data/config/KlipperScreen.conf"
+LOG="/home/qidi/printer_data/logs/KlipperScreen.log"
+
+xvfb_pid=""
+bridge_pid=""
+screen_pid=""
+stopping=0
+
+cleanup() {
+    set +e
+    [ -n "$screen_pid" ] && kill "$screen_pid" 2>/dev/null
+    [ -n "$bridge_pid" ] && kill "$bridge_pid" 2>/dev/null
+    [ -n "$xvfb_pid" ] && kill "$xvfb_pid" 2>/dev/null
+    wait 2>/dev/null
+    rm -f /tmp/.X0-lock
+}
+
+stop_cleanly() {
+    stopping=1
+    cleanup
+    exit 0
+}
+
+trap stop_cleanly INT TERM HUP
+trap cleanup EXIT
+
+cd /home/qidi/KlipperScreen
+install -d -m 0700 "$XDG_RUNTIME_DIR"
+rm -f /tmp/.X0-lock
+
+"$XVFB" "$DISPLAY" -screen 0 480x272x24 -nolisten tcp -noreset &
+xvfb_pid=$!
+
+attempt=0
+while [ ! -S /tmp/.X11-unix/X0 ]; do
+    attempt=$((attempt + 1))
+    if [ "$attempt" -ge 50 ]; then
+        printf 'Xvfb did not become ready.\n' >&2
+        exit 1
+    fi
+    sleep 0.1
+done
+
+Q2_BRIDGE_FPS=20 "$BRIDGE" &
+bridge_pid=$!
+
+"$PYTHON" "$SCREEN" --configfile "$CONFIG" --logfile "$LOG" &
+screen_pid=$!
+
+wait -n "$xvfb_pid" "$bridge_pid" "$screen_pid"
+status=$?
+
+if [ "$stopping" -eq 1 ]; then
+    exit 0
+fi
+
+printf 'KlipperScreen display component exited unexpectedly (status %s).\n' "$status" >&2
+exit 1

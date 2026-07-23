@@ -1,0 +1,51 @@
+# Changelog
+
+This file records public installer releases. The format is inspired by
+[Keep a Changelog](https://keepachangelog.com/), minus the fiction that a home
+project emerges from the workshop with a perfect release process.
+
+## [1.3.2] — 2026-07-23
+
+### Changed
+
+- Made English the default KlipperScreen language.
+- Turned the project into a clean, documented, CI-checked repository.
+- Added browser-friendly 720p H.264 demo videos.
+
+## [1.3.1] — 2026-07-23
+
+### Fixed
+
+- Corrected the framebuffer splash row order. The logo no longer auditions for
+  Australian KlipperScreen on the physical Q2 panel.
+
+## [1.3.0] — 2026-07-23
+
+### Added
+
+- Added a branded 480×272 startup splash.
+- Kept the splash visible until GTK paints a meaningful frame.
+- Added a 15-second safety timeout for a stalled display stack.
+
+## [1.2.1] — 2026-07-23
+
+### Changed
+
+- Stopped ordinary taps from flooding the gesture daemon journal.
+
+## [1.2.0] — 2026-07-23
+
+### Added
+
+- Added full-screen swipes between QIDI UI and KlipperScreen.
+- Added an independent systemd gesture service.
+
+## [1.0.0] — 2026-07-23
+
+### Added
+
+- Added self-contained KlipperScreen installation for the stock QIDI Q2 panel.
+- Added Xvfb and the ARM64 framebuffer/input bridge.
+- Added five-point Goodix calibration.
+- Kept the stock QIDI Client with automatic failure fallback.
+- Added firmware, print-state, APT plan, and SHA-256 safety checks.

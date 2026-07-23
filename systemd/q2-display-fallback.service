@@ -1,0 +1,7 @@
+[Unit]
+Description=Restore stock QIDI display after KlipperScreen failure
+After=KlipperScreen.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/q2-display-mode qidi

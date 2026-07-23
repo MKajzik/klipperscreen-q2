@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="272" viewBox="0 0 480 272">
+  <rect width="480" height="272" fill="#13181c"/>
+
+  <!-- KlipperScreen's official display icon, enlarged for the Q2 panel. -->
+  <g transform="translate(190 30) scale(1.5625)">
+    <rect x="4.477" y="8.318" width="55.045" height="47.364" rx="2"
+          fill="#13181c" stroke="#050607" stroke-width="4"/>
+    <path d="m10.919 44.683 4.398-10.401 12.696.029"
+          fill="none" stroke="#dd5f01" stroke-width="2"/>
+    <path d="m10.004 40.897 17.992.082"
+          fill="none" stroke="#009183" stroke-width="2"/>
+    <path d="M12.5 18.345h10M12.5 24.784h14"
+          fill="none" stroke="#fff" stroke-width="3"/>
+    <g fill="#40474c">
+      <rect x="33" y="15" width="10" height="10"/>
+      <rect x="45" y="15" width="10" height="10"/>
+      <rect x="33" y="27" width="10" height="10"/>
+      <rect x="45" y="27" width="10" height="10"/>
+      <rect x="33" y="39" width="22" height="10"/>
+    </g>
+    <path d="M33 25h10M33 49h22" stroke="#ed6500"/>
+    <path d="M45 25h10" stroke="#ae007e"/>
+    <path d="M33 37h10" stroke="#009384"/>
+    <path d="M45 37h10" stroke="#a7e100"/>
+    <path d="M10.5 23.284v3" stroke="#009183"/>
+    <path d="M10.5 16.845v3" stroke="#ed6500"/>
+  </g>
+
+  <text x="240" y="174" text-anchor="middle"
+        fill="#f5f7f8" font-family="Arial,DejaVu Sans,sans-serif"
+        font-size="34" font-weight="600" letter-spacing="-0.7">KlipperScreen</text>
+
+  <g transform="translate(221 209)">
+    <circle cx="4" cy="4" r="4" fill="#ed6500"/>
+    <circle cx="19" cy="4" r="4" fill="#72503b"/>
+    <circle cx="34" cy="4" r="4" fill="#3e3733"/>
+  </g>
+</svg>

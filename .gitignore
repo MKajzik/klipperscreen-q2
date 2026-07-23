@@ -1,0 +1,15 @@
+.DS_Store
+.local-artifacts/
+
+*.log
+*.ppm
+*.raw
+*.sb-*
+*.swp
+*.tmp
+*.deb
+*.tar.gz
+__pycache__/
+
+/bridge/q2-x11-fb-bridge
+/gesture/q2-display-gesture

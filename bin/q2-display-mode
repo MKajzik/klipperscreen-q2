@@ -1,0 +1,107 @@
+#!/bin/sh
+set -eu
+
+QIDI_SERVICE="qidi-client.service"
+KS_SERVICE="KlipperScreen.service"
+
+require_root() {
+    if [ "$(id -u)" -ne 0 ]; then
+        printf 'Run as root: sudo q2-display-mode %s\n' "${1:-status}" >&2
+        exit 1
+    fi
+}
+
+service_state() {
+    if systemctl list-unit-files "$1" --no-legend 2>/dev/null | grep -q .; then
+        systemctl is-active "$1" 2>/dev/null || true
+    else
+        printf 'not-installed\n'
+    fi
+}
+
+show_status() {
+    printf 'qidi-client: %s\n' "$(service_state "$QIDI_SERVICE")"
+    printf 'KlipperScreen: %s\n' "$(service_state "$KS_SERVICE")"
+    printf 'boot UI: '
+    if systemctl is-enabled --quiet "$KS_SERVICE" 2>/dev/null; then
+        printf 'KlipperScreen\n'
+    elif systemctl is-enabled --quiet "$QIDI_SERVICE" 2>/dev/null; then
+        printf 'QIDI\n'
+    else
+        printf 'not configured\n'
+    fi
+}
+
+start_qidi() {
+    systemctl stop "$KS_SERVICE" 2>/dev/null || true
+    systemctl reset-failed "$KS_SERVICE" 2>/dev/null || true
+    systemctl restart "$QIDI_SERVICE"
+    sleep 2
+    if ! systemctl is-active --quiet "$QIDI_SERVICE"; then
+        printf 'Failed to restore the stock QIDI display service.\n' >&2
+        exit 1
+    fi
+    show_status
+}
+
+start_klipperscreen() {
+    if ! systemctl cat "$KS_SERVICE" >/dev/null 2>&1; then
+        printf '%s is not installed.\n' "$KS_SERVICE" >&2
+        exit 1
+    fi
+
+    systemctl stop "$QIDI_SERVICE"
+    if ! systemctl restart "$KS_SERVICE"; then
+        systemctl restart "$QIDI_SERVICE"
+        printf 'KlipperScreen failed to start; QIDI UI was restored.\n' >&2
+        exit 1
+    fi
+
+    sleep 5
+    if ! systemctl is-active --quiet "$KS_SERVICE"; then
+        systemctl stop "$KS_SERVICE" 2>/dev/null || true
+        systemctl restart "$QIDI_SERVICE"
+        printf 'KlipperScreen did not remain active; QIDI UI was restored.\n' >&2
+        exit 1
+    fi
+    show_status
+}
+
+enable_qidi() {
+    systemctl disable "$KS_SERVICE" 2>/dev/null || true
+    systemctl enable "$QIDI_SERVICE"
+    start_qidi
+}
+
+enable_klipperscreen() {
+    systemctl disable "$QIDI_SERVICE"
+    systemctl enable "$KS_SERVICE"
+    start_klipperscreen
+}
+
+command="${1:-status}"
+case "$command" in
+    status)
+        show_status
+        ;;
+    qidi)
+        require_root "$command"
+        start_qidi
+        ;;
+    klipperscreen)
+        require_root "$command"
+        start_klipperscreen
+        ;;
+    enable-qidi)
+        require_root "$command"
+        enable_qidi
+        ;;
+    enable-klipperscreen)
+        require_root "$command"
+        enable_klipperscreen
+        ;;
+    *)
+        printf 'Usage: q2-display-mode {status|qidi|klipperscreen|enable-qidi|enable-klipperscreen}\n' >&2
+        exit 2
+        ;;
+esac
