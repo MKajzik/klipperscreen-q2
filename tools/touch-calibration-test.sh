@@ -15,7 +15,7 @@ cleanup() {
     [ -n "$bridge_pid" ] && kill "$bridge_pid" 2>/dev/null
     [ -n "$xvfb_pid" ] && kill "$xvfb_pid" 2>/dev/null
     wait 2>/dev/null
-    systemctl restart qidi-client.service
+    systemctl restart makerbase-client.service
 }
 
 trap cleanup EXIT INT TERM HUP
@@ -24,7 +24,7 @@ rm -rf "$LOG_DIR"
 mkdir -p "$LOG_DIR"
 rm -f "/tmp/.X96-lock"
 
-systemctl stop qidi-client.service
+systemctl stop makerbase-client.service
 
 runuser -u qidi -- env HOME=/home/qidi "$XVFB" "$DISPLAY_NUMBER" \
     -screen 0 480x272x24 -nolisten tcp -noreset \

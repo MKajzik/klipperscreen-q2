@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 #define DEFAULT_INPUT "/dev/input/event0"
-#define QIDI_SERVICE "qidi-client.service"
+#define QIDI_SERVICE "makerbase-client.service"
 #define KLIPPERSCREEN_SERVICE "KlipperScreen.service"
 #define DISPLAY_HELPER "/usr/local/sbin/q2-display-mode"
 

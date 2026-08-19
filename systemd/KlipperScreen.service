@@ -2,7 +2,7 @@
 Description=KlipperScreen for QIDI Q2
 After=moonraker.service network-online.target
 Wants=network-online.target
-Conflicts=qidi-client.service
+Conflicts=makerbase-client.service
 OnFailure=q2-display-fallback.service
 StartLimitIntervalSec=60
 StartLimitBurst=2

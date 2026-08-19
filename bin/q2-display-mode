@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-QIDI_SERVICE="qidi-client.service"
+QIDI_SERVICE="makerbase-client.service"
 KS_SERVICE="KlipperScreen.service"
 
 require_root() {

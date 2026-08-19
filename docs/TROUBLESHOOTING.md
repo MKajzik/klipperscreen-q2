@@ -12,9 +12,9 @@ If the helper is unavailable:
 
 ```sh
 sudo systemctl disable KlipperScreen.service
-sudo systemctl enable qidi-client.service
+sudo systemctl enable makerbase-client.service
 sudo systemctl stop KlipperScreen.service
-sudo systemctl restart qidi-client.service
+sudo systemctl restart makerbase-client.service
 ```
 
 ## Check status

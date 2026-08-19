@@ -49,7 +49,7 @@ This removes the black startup gap without hiding a stalled UI forever.
 `q2-display-mode` ensures that only one UI owns the panel:
 
 ```text
-qidi-client.service ◄──── q2-display-mode ────► KlipperScreen.service
+makerbase-client.service ◄──── q2-display-mode ────► KlipperScreen.service
                                                 │
                                                 └── OnFailure:
                                                     q2-display-fallback.service

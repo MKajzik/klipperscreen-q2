@@ -17,7 +17,7 @@ readonly INSTALLER_VERSION="1.3.2"
 readonly SUPPORTED_ARCH="arm64"
 readonly SUPPORTED_OS="debian"
 readonly SUPPORTED_OS_VERSION="11"
-readonly SUPPORTED_FIRMWARE="01.01.02.03"
+readonly SUPPORTED_FIRMWARE="1.1.1"
 readonly EXPECTED_FB_SIZE="480,272"
 readonly EXPECTED_TOUCH_NAME="Goodix Capacitive TouchScreen"
 
@@ -128,9 +128,9 @@ cleanup() {
     if ((status != 0 && display_was_switched == 1)); then
         warn "Installation failed; restoring the stock QIDI interface."
         systemctl disable KlipperScreen.service >/dev/null 2>&1 || true
-        systemctl enable qidi-client.service >/dev/null 2>&1 || true
+        systemctl enable makerbase-client.service >/dev/null 2>&1 || true
         systemctl stop KlipperScreen.service >/dev/null 2>&1 || true
-        systemctl restart qidi-client.service >/dev/null 2>&1 || true
+        systemctl restart makerbase-client.service >/dev/null 2>&1 || true
     fi
     exit "$status"
 }
@@ -213,7 +213,7 @@ verify_platform() {
         platform_mismatch \
             "Expected Debian 11, found ${ID:-unknown} ${VERSION_ID:-unknown}."
 
-    firmware="$(dpkg-query -W -f='${Version}' qd-q2-system 2>/dev/null || true)"
+    firmware="$(dpkg-query -W -f='${Version}' qidi-q2-system 2>/dev/null || true)"
     [[ "$firmware" == "$SUPPORTED_FIRMWARE" ]] ||
         platform_mismatch \
             "Expected Q2 firmware ${SUPPORTED_FIRMWARE}, found ${firmware:-unknown}."
@@ -230,8 +230,8 @@ verify_platform() {
         platform_mismatch \
             "Expected '${EXPECTED_TOUCH_NAME}', found '${touchscreen_name:-unknown}'."
 
-    systemctl cat qidi-client.service >/dev/null 2>&1 ||
-        platform_mismatch "qidi-client.service is missing."
+    systemctl cat makerbase-client.service >/dev/null 2>&1 ||
+        platform_mismatch "makerbase-client.service is missing."
     getent passwd qidi >/dev/null || platform_mismatch "The qidi user is missing."
     command -v gcc >/dev/null 2>&1 ||
         platform_mismatch "The stock GCC compiler is missing."
@@ -262,7 +262,7 @@ make_initial_backup() {
     for path in \
         home/qidi/QIDI_Client \
         home/qidi/printer_data/config \
-        etc/systemd/system/qidi-client.service \
+        etc/systemd/system/makerbase-client.service \
         etc/X11 \
         usr/local/sbin/q2-display-mode \
         usr/local/libexec/q2 \
@@ -275,8 +275,8 @@ make_initial_backup() {
 
     dpkg-query -W -f='${binary:Package}\t${Version}\t${db:Status-Status}\n' \
         >"${backup_dir}/packages.tsv"
-    systemctl cat qidi-client.service \
-        >"${backup_dir}/qidi-client.service.txt" 2>&1 || true
+    systemctl cat makerbase-client.service \
+        >"${backup_dir}/makerbase-client.service.txt" 2>&1 || true
     uname -a >"${backup_dir}/uname.txt"
     dpkg-query -W -f='${Version}\n' qd-q2-system \
         >"${backup_dir}/q2-firmware-version.txt" 2>/dev/null || true
@@ -624,7 +624,7 @@ STARTER
 #!/bin/sh
 set -eu
 
-QIDI_SERVICE="qidi-client.service"
+QIDI_SERVICE="makerbase-client.service"
 KS_SERVICE="KlipperScreen.service"
 
 require_root() {
@@ -755,7 +755,7 @@ KS_CONFIG
 Description=KlipperScreen for QIDI Q2
 After=moonraker.service network-online.target
 Wants=network-online.target
-Conflicts=qidi-client.service
+Conflicts=makerbase-client.service
 OnFailure=q2-display-fallback.service
 StartLimitIntervalSec=60
 StartLimitBurst=2
@@ -904,7 +904,7 @@ show_status() {
     if [[ -x /usr/local/sbin/q2-display-mode ]]; then
         /usr/local/sbin/q2-display-mode status
     else
-        printf 'qidi-client: %s\n' "$(systemctl is-active qidi-client.service 2>/dev/null || true)"
+        printf 'qidi-client: %s\n' "$(systemctl is-active makerbase-client.service 2>/dev/null || true)"
         printf 'KlipperScreen: not-installed\n'
     fi
     printf 'display gestures: %s (%s at boot)\n' \
@@ -925,7 +925,7 @@ run_install() {
         /usr/local/sbin/q2-display-mode qidi
     else
         systemctl stop KlipperScreen.service >/dev/null 2>&1 || true
-        systemctl restart qidi-client.service
+        systemctl restart makerbase-client.service
     fi
     display_was_switched=1
 
