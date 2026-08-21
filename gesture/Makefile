@@ -2,12 +2,12 @@ CC ?= gcc
 CFLAGS ?= -O2 -Wall -Wextra -Werror
 LDLIBS ?= -lX11 -lXext -lXtst
 
-all: q2-display-gesture
+all: gesture
 
-q2-display-gesture: q2-display-gesture.c
+gesture: q2-display-gesture.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDLIBS)
 
 clean:
-	rm -f q2-display-gesture
+	rm -f gesture
 
 .PHONY: all clean
